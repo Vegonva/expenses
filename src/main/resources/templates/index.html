@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html ng-app="demo">
+
+
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+	<script src="./js/services.js"></script>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+</head>
+
+<body ng-controller="ExpensesServiceController" ng-init="getExpenses()">
+
+<div class="jumbotron text-center">
+	<h2>MY EXPENSES</h2>
+</div>
+
+<div class="container">
+	<table>
+		<thead>
+		<th><label for="description">Description:</label></th>
+		<th><label for="value">Value:</label></th>
+		<th><label for="date">Date(yyyy-MM-dd):</label></th>
+		</thead>
+
+		<tbody>
+		<tr>
+			<td><input id="description" ng-model="description" type="text" maxlength="20" /></td>
+			<td><input id="value" ng-model="value" type="number" maxlength="10" /></td>
+			<td><input id="date" ng-model="date" type="text" maxlength="10" /></td>
+			<td>
+				<button id="addBtn" class="btn" ng-click="addExpense()">Add expense</button>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+</div>
+<br />
+<br />
+<div class="container" ng-controller="ExpensesServiceController" ng-show="expenses != null">
+	<table class="table table-striped">
+		<thead>
+		  <th>Description</th>
+		  <th>Value</th>
+		  <th>Date</th>
+		</thead>
+		<tbody>
+		  <tr ng-repeat="expense in expenses" ng-include="getTemplate(expense)">
+		  </tr>
+		</tbody>
+	</table>
+
+	<script type="text/ng-template" id="display">
+		<td>{{expense.description}}</td>
+		<td>{{expense.value}}</td>
+		<td>{{expense.date}}</td>
+		<td>
+			<button id="editBtn" class="btn" ng-click="editExpenseTemplate(expense)">Edit expense</button>
+			<button id="delBtn" class="btn" ng-click="deleteExpense(expense.id)">Delete expense</button>
+		</td>
+	</script>
+	<script type="text/ng-template" id="edit">
+		<td><input type="text" ng-model="model.selected.description" /></td>
+		<td><input type="number" ng-model="model.selected.value" /></td>
+		<td><input type="text" ng-model="model.selected.date" /></td>
+		<td>
+			<button id="saveBtn" class="btn" ng-click="editExpense(expense.id)">Save expense</button>
+			<button id="cancelBtn" class="btn" ng-click="reset()">Cancel</button>
+		</td>
+	</script>
+</div>
+
+
+</body>
+</html>
+
+
