@@ -98,7 +98,7 @@ public class ExpensesServiceImpl implements ExpensesService{
 
 	private static void createConnection() throws ClassNotFoundException, SQLException {
 		Class.forName("org.h2.Driver");
-		conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
+		conn = DriverManager.getConnection("jdbc:h2:~/expenses/src/main/resources/test", "sa", "");
 		statement = conn.createStatement();
 	}
 
