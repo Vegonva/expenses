@@ -27,7 +27,6 @@ public class ExpensesServiceImpl implements ExpensesService{
 				Expense expense = new Expense(rs.getLong("id"),rs.getString("description"), rs.getDouble("value"), rs.getDate("expensedate"));
 				expenses.add(expense);
 			}
-			closeConnection();
 		} catch (Exception e) {
 			//TODO
 			//logger.error("Error finding all expenses");
@@ -40,10 +39,8 @@ public class ExpensesServiceImpl implements ExpensesService{
 		DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 		String strDate = df.format(expense.getDate());
 		try {
-			createConnection();
 			String query = "insert into EXPENSES (description, value, expensedate) values('"+ expense.getDescription()+"', "+expense.getValue()+" , parsedatetime('" + strDate+"', 'dd-MM-yyyy'))";
 			ExpensesServiceImpl.statement.execute(query);
-			closeConnection();
 		} catch (Exception e) {
 			//TODO
 			//logger.error("Error saving Expense : {}", expense)
@@ -54,11 +51,9 @@ public class ExpensesServiceImpl implements ExpensesService{
 		DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 		String strDate = df.format(expense.getDate());
 		try {
-			createConnection();
 			String query = "update EXPENSES set description = '"+ expense.getDescription()+"', value= "+expense.getValue()+" , expensedate= parsedatetime('" +
 					strDate+"', 'dd-MM-yyyy') where id = "+expense.getId()+" ";
 			ExpensesServiceImpl.statement.execute(query);
-			closeConnection();
 		} catch (Exception e) {
 			//TODO
 			//logger.error("Error updating Expense : {}", expense)
@@ -67,9 +62,7 @@ public class ExpensesServiceImpl implements ExpensesService{
 
 	public void deleteExpenseById(long id) {
 		try{
-			createConnection();
 			ExpensesServiceImpl.statement.execute("delete from EXPENSES where id = " + id);
-			closeConnection();
 		} catch (Exception e) {
 			//TODO
 			//logger.error("Error deleting Expense with id : {}", id);
@@ -79,9 +72,7 @@ public class ExpensesServiceImpl implements ExpensesService{
 
 	public void deleteAllExpenses(){
 		try{
-			createConnection();
 			ExpensesServiceImpl.statement.execute("delete from EXPENSES");
-			closeConnection();
 		} catch (Exception e) {
 			//TODO
 			//logger.error("Error deleting all Expenses");
@@ -98,8 +89,9 @@ public class ExpensesServiceImpl implements ExpensesService{
 
 	private static void createConnection() throws ClassNotFoundException, SQLException {
 		Class.forName("org.h2.Driver");
-		conn = DriverManager.getConnection("jdbc:h2:~/expenses/src/main/resources/test", "sa", "");
-		statement = conn.createStatement();
+		conn = DriverManager.getConnection("jdbc:h2:mem:test", "sa", "");
+                statement = conn.createStatement();
+                ExpensesServiceImpl.statement.execute("create table IF NOT EXISTS expenses (id bigint auto_increment, description varchar(255),value double,expensedate date)");
 	}
 
 }
